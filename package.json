@@ -1,0 +1,14 @@
+{
+  "name": "bank-transaction-api",
+  "version": "1.0.0",
+  "description": "A simple banking transaction API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "helmet": "^7.0.0",
+    "uuid": "^9.0.0"
+  }
+}

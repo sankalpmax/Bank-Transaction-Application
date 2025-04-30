@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bank Transaction API</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    h1 { text-align: center; color: #333; }
+    .section {
+      margin: 20px 0;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input, select {
+      width: 100%; padding: 8px; margin-bottom: 10px;
+      border: 1px solid #ccc; border-radius: 4px;
+    }
+    button {
+      padding: 10px 20px; background-color: #007bff;
+      color: white; border: none; border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover { background-color: #0056b3; }
+    #response {
+      margin-top: 20px; padding: 10px;
+      border: 1px solid #ccc; border-radius: 4px;
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+  <h1>Bank Transaction API</h1>
+  <div class="section">
+    <h2>Create Account</h2>
+    <label for="accountId">Account ID:</label>
+    <input id="accountId" type="text" placeholder="e.g., ACC123" />
+    <label for="initialBalance">Initial Balance:</label>
+    <input id="initialBalance" type="number" placeholder="e.g., 1000" />
+    <button onclick="createAccount()">Create Account</button>
+  </div>
+  <div class="section">
+    <h2>Record Transaction</h2>
+    <label for="transAccountId">Account ID:</label>
+    <input id="transAccountId" type="text" placeholder="e.g., ACC123" />
+    <label for="amount">Amount:</label>
+    <input id="amount" type="number" placeholder="e.g., 100" />
+    <label for="type">Type:</label>
+    <select id="type">
+      <option value="deposit">Deposit</option>
+      <option value="withdrawal">Withdrawal</option>
+    </select>
+    <button onclick="recordTransaction()">Record Transaction</button>
+  </div>
+  <div class="section">
+    <h2>Check Balance</h2>
+    <label for="balanceAccountId">Account ID:</label>
+    <input id="balanceAccountId" type="text" placeholder="e.g., ACC123" />
+    <button onclick="checkBalance()">Check Balance</button>
+  </div>
+  <div class="section">
+    <h2>Transaction History</h2>
+    <label for="historyAccountId">Account ID:</label>
+    <input id="historyAccountId" type="text" placeholder="e.g., ACC123" />
+    <button onclick="getTransactionHistory()">Get History</button>
+  </div>
+  <div id="response"></div>
+
+  <script>
+    const apiKey = 'secure-bank-api-key-123';
+    const displayResponse = (data) => {
+      document.getElementById('response').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+    };
+
+    async function createAccount() {
+      const accountId = document.getElementById('accountId').value;
+      const initialBalance = parseFloat(document.getElementById('initialBalance').value);
+      try {
+        const response = await fetch('/api/accounts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
+          body: JSON.stringify({ accountId, initialBalance })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error);
+        displayResponse(data);
+      } catch (error) {
+        displayResponse({ error: error.message });
+      }
+    }
+
+    async function recordTransaction() {
+      const accountId = document.getElementById('transAccountId').value;
+      const amount = parseFloat(document.getElementById('amount').value);
+      const type = document.getElementById('type').value;
+      try {
+        const response = await fetch('/api/transactions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
+          body: JSON.stringify({ accountId, amount, type })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error);
+        displayResponse(data);
+      } catch (error) {
+        displayResponse({ error: error.message });
+      }
+    }
+
+    async function checkBalance() {
+      const accountId = document.getElementById('balanceAccountId').value;
+      try {
+        const response = await fetch(`/api/accounts/${accountId}/balance`, {
+          headers: { 'x-api-key': apiKey }
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error);
+        displayResponse(data);
+      } catch (error) {
+        displayResponse({ error: error.message });
+      }
+    }
+
+    async function getTransactionHistory() {
+      const accountId = document.getElementById('historyAccountId').value;
+      try {
+        const response = await fetch(`/api/accounts/${accountId}/transactions`, {
+          headers: { 'x-api-key': apiKey }
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error);
+        displayResponse(data);
+      } catch (error) {
+        displayResponse({ error: error.message });
+      }
+    }
+  </script>
+</body>
+</html>
+
