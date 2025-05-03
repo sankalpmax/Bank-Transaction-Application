@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/sankalpmax/devops_task_microdrgree.git'
+                git 'https://github.com/sankalpmax/Bank-Transaction-Application.git'
             }
         }
 
