@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/sankalpmax/Bank-Transaction-Application.git' , git branch: 'main'
+               git branch: 'main', url: 'https://github.com/sankalpmax/Bank-Transaction-Application.git'
             }
         }
 
