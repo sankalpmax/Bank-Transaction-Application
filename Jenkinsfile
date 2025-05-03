@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         nodejs 'NodeJS'
-        sonarQubeScanner 'SonarScanner' // Name must match what's in Global Tool Config
+        
     }
 
     environment {
