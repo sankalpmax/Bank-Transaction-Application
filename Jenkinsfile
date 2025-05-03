@@ -8,7 +8,6 @@ pipeline {
             steps {
                 git url: 'https://github.com/sankalpmax/Bank-Transaction-Application.git', branch: 'main'
                 sh 'npm install' // Install dependencies
-                sh 'npm run build' // Build the app (if applicable)
             }
         }
         stage('Test') {
