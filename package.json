@@ -4,7 +4,7 @@
   "description": "A simple banking transaction API",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
     "test": "echo \"No tests defined\""
   },
   "dependencies": {
@@ -13,3 +13,4 @@
     "uuid": "^9.0.0"
   }
 }
+
