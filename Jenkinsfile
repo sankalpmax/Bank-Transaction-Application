@@ -1,44 +1,33 @@
 pipeline {
     agent any
-
     tools {
-        nodejs 'NodeJS' // Must match the name in Jenkins Global Tool Configuration
+        nodejs 'NodeJS'            // Set this in Global Tools
+        sonarQubeScanner 'SonarScanner'  // Set this in Global Tools
+    }
+
+    environment {
+        SONARQUBE = 'SonarQube'    // Name of SonarQube server in Jenkins
     }
 
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
                 git url: 'https://github.com/sankalpmax/Bank-Transaction-Application.git', branch: 'main'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Install') {
             steps {
                 sh 'npm install'
             }
         }
 
-        stage('Test') {
+        stage('SonarQube Analysis') {
             steps {
-                // Use dummy test command to avoid breaking pipeline
-                sh 'npm run test || echo "No tests defined, skipping..."'
+                withSonarQubeEnv("${env.SONARQUBE}") {
+                    sh 'sonar-scanner'
+                }
             }
-        }
-
-        stage('Start Application') {
-            steps {
-                // Runs the app in the background
-                sh 'nohup npm start &'
-            }
-        }
-    }
-
-    post {
-        success {
-            echo '✅ Pipeline executed successfully.'
-        }
-        failure {
-            echo '❌ Pipeline failed. Please check the logs.'
         }
     }
 }
