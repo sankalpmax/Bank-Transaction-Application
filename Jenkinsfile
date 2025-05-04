@@ -11,7 +11,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build('sankalparava/bank-transaction-app:latest')
+                    docker.build('sankalparava/bank-transaction-app:07')
                 }
             }
         }
@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
-                        docker.image('sankalparava/bank-transaction-app:latest').push()
+                        docker.image('sankalparava/bank-transaction-app:07').push()
                     }
                 }
             }
@@ -31,7 +31,7 @@ pipeline {
                 script {
                     sh 'docker stop bank-transaction-app || true'
                     sh 'docker rm bank-transaction-app || true'
-                    sh 'docker run -d -p 4000:4000 --name bank-transaction-app sankalparava/bank-transaction-app:latest'
+                    sh 'docker run -d -p 4000:4000 --name bank-transaction-app sankalparava/bank-transaction-app:07'
                 }
             }
         }
@@ -39,23 +39,22 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 script {
-                    // SSH into the EC2 instance and deploy the container
+                    // Use the SSH key stored in Jenkins credentials (ID: 'ec2-ssh-key') to authenticate
+                    // This step makes the SSH key available for the 'ssh' command below
                     sshagent(credentials: ['ec2-ssh-key']) {
+                        // Connect to the EC2 instance as ec2-user
+                        // Replace <ec2-public-ip> with your EC2 instance's public IP (e.g., 52.90.123.456)
+                        // The commands between << 'EOF' and EOF are executed on the EC2 instance
+                        // Stops any existing container (if it exists)
+                        // Removes the stopped container (if it exists)
+                        // Pulls the Docker image from Docker Hub
+                        // Runs the container on the EC2 instance, mapping port 4000
                         sh '''
                         ssh -o StrictHostKeyChecking=no ec2-user@3.84.121.155 << 'EOF'
-                       
-                        # Stop and remove any existing container
-
                         docker stop bank-transaction-app || true
                         docker rm bank-transaction-app || true
-                       
-                        # Pull the latest image from Docker Hub
-                       
-                        docker pull sankalparava/bank-transaction-app:latest
-                       
-                        # Run the container
-                       
-                        docker run -d -p 4000:4000 --name bank-transaction-app sankalparava/bank-transaction-app:latest
+                        docker pull sankalparava/bank-transaction-app:07
+                        docker run -d -p 4000:4000 --name bank-transaction-app sankalparava/bank-transaction-app:07
                         EOF
                         '''
                     }
