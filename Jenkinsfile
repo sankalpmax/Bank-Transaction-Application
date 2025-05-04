@@ -3,7 +3,6 @@ pipeline {
 
     tools {
         nodejs 'NodeJS'
-        
     }
 
     environment {
@@ -13,7 +12,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-               git branch: 'main', url: 'https://github.com/sankalpmax/Bank-Transaction-Application.git'
+                git branch: 'main', url: 'https://github.com/sankalpmax/Bank-Transaction-Application.git'
             }
         }
 
@@ -23,27 +22,17 @@ pipeline {
             }
         }
 
-        // Optional: Only include if absolutely needed for test coverage
-        /*
-        stage('Start Application') {
-            steps {
-                sh 'npm start &'
-                // Add timeout if needed
-            }
-        }
-        */
-
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv("${SONARQUBE}") {
-                    sh 'sonar-scanner'
+                    sh '/opt/sonar-scanner/bin/sonar-scanner'
                 }
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'npm test'
+                sh 'npm test || exit 1'
             }
         }
     }
