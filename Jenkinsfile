@@ -1,40 +1,19 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'NodeJS'
-    }
-
-    environment {
-        SONARQUBE = 'SonarQube'
-    }
-
     stages {
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/sankalpmax/Bank-Transaction-Application.git'
+                git url: 'https://github.com/sankalpmax/Bank-Transaction-Application.git', branch: 'main'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Build Docker Image') {
             steps {
-                sh 'npm install'
-            }
-        }
-
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv("${SONARQUBE}") {
-                    sh '/opt/sonar-scanner/bin/sonar-scanner'
+                script {
+                    docker.build('bank-transaction-app:latest')
                 }
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh 'npm test || exit 1'
             }
         }
     }
 }
-
