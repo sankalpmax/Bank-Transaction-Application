@@ -29,11 +29,36 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    // Stop and remove any existing container with the same name
                     sh 'docker stop bank-transaction-app || true'
                     sh 'docker rm bank-transaction-app || true'
-                    // Run the container from Docker Hub
                     sh 'docker run -d -p 4000:4000 --name bank-transaction-app sankalparava/bank-transaction-app:latest'
+                }
+            }
+        }
+
+        stage('Deploy to EC2') {
+            steps {
+                script {
+                    // SSH into the EC2 instance and deploy the container
+                    sshagent(credentials: ['ec2-ssh-key']) {
+                        sh '''
+                        ssh -o StrictHostKeyChecking=no ec2-user@3.84.121.155 << 'EOF'
+                       
+                        # Stop and remove any existing container
+
+                        docker stop bank-transaction-app || true
+                        docker rm bank-transaction-app || true
+                       
+                        # Pull the latest image from Docker Hub
+                       
+                        docker pull sankalparava/bank-transaction-app:latest
+                       
+                        # Run the container
+                       
+                        docker run -d -p 4000:4000 --name bank-transaction-app sankalparava/bank-transaction-app:latest
+                        EOF
+                        '''
+                    }
                 }
             }
         }
