@@ -1,0 +1,20 @@
+apiVersion: apps/v1           
+kind: Deployment
+metadata:
+  name: hdfc-bank-deployment
+spec:
+  replicas: 2            
+  selector:
+    matchLabels:
+      app: hdfc-bank-deployment
+  template:
+    metadata:
+      labels:
+        app: hdfc-bank-deployment 
+    spec:
+      containers:
+        - name: hdfc-container
+          image: sankalparava/hdfc-bank:01
+          ports:
+            - containerPort: 80
+
