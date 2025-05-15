@@ -32,7 +32,8 @@ pipeline {
 
         stage('Kubernetes Deploy') {
             steps {
-                sh 'kubectl create deployment hdfc-bank-deployment --image=sankalparava/hdfc-bank-orchestrate:01'
+                sh 'kubectl apply -f hdfc-bank-deployment.yaml'
+		sh 'kubectl apply -f hdfc-bank-service.yaml'
             }
         }
     }
