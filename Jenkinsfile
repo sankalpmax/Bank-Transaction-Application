@@ -27,7 +27,14 @@ pipeline {
 				sh 'docker push sankalparava/hdfc-bank-orchestrate:01' 
 					}
 				}
-			}
+	stage('Kubernetes Deploy') {
+		steps{
+			sh 'kubectl create deployment hdfc-bank-deployment --image=sankalparava/hdfc-bank-orchestrate:01'
+
+					}
+				}
+			}		
 		}
 	}
 }
+
