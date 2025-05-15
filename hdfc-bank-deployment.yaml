@@ -14,7 +14,6 @@ spec:
     spec:
       containers:
         - name: hdfc-container
-          image: sankalparava/hdfc-bank:01
+          image: sankalparava/hdfc-bank-orchestrate:01
           ports:
             - containerPort: 80
-
