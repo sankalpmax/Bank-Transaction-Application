@@ -32,8 +32,7 @@ pipeline {
 
         stage('Kubernetes Deploy') {
             steps {
-                sh 'kubectl apply -f hdfc-bank-deployment.yaml'
-		sh 'kubectl apply -f hdfc-bank-service.yaml'
+                sh 'kubectl get pods -A'
             }
         }
     }
