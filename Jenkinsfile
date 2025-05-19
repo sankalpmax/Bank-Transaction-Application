@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        KUBECONFIG = credentials('kubeconfig-minikube')  // load kubeconfig into env
+    }
+
     stages {
         stage('Clone') {
             steps {
@@ -16,7 +20,7 @@ pipeline {
 
         stage('Docker Run Container') {
             steps {
-                sh 'docker run -d -p 3000:3000 --name hdfc sankalparava/hdfc-bank-orchestrate:01'
+                sh 'docker run -d -p 3000:3000 --name hdfc sankalparava/hdfc-bank-orchestrate:01 || true'
             }
         }
 
@@ -37,3 +41,4 @@ pipeline {
         }
     }
 }
+
