@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        KUBECONFIG = credentials('kubeconfig-minikube')  // load kubeconfig into env
+        KUBECONFIG = '/var/lib/jenkins/.kube/config'
     }
 
     stages {
