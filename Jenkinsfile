@@ -41,7 +41,7 @@ pipeline {
             steps {
                 sh '''
                 kubectl apply -f hdfc-bank-deployment.yaml
-                kubectl rollout status deployment/hdfc-bank-orchestrate
+     		kubectl apply -f hdfc-bank-service.yaml           
                 '''
             }
         }
