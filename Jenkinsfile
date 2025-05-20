@@ -20,7 +20,10 @@ pipeline {
 
         stage('Docker Run Container') {
             steps {
-                sh 'docker run -d -p 3000:3000 --name hdfc sankalparava/hdfc-bank-orchestrate:01 || true'
+                sh '''
+                docker rm -f hdfc || true
+                docker run -d -p 3000:3000 --name hdfc sankalparava/hdfc-bank-orchestrate:01
+                '''
             }
         }
 
@@ -36,7 +39,10 @@ pipeline {
 
         stage('Kubernetes Deploy') {
             steps {
-                sh 'kubectl apply -f hdfc-bank-deployment.yaml'
+                sh '''
+                kubectl apply -f hdfc-bank-deployment.yaml
+                kubectl rollout status deployment/hdfc-bank-orchestrate
+                '''
             }
         }
     }
